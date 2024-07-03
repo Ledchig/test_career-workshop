@@ -23,7 +23,7 @@ const Profile = () => {
     <div className="flex flex-col items-center gap-6">
       <LayoutForm>
         <form
-          className="flex flex-col items-center gap-9"
+          className="flex flex-col items-center gap-9 w-96"
           onSubmit={handleSubmit(onSubmit)}
         >
           <h1 className="text-2xl font-bold leading-7">Изменение данных</h1>
@@ -51,10 +51,9 @@ const Profile = () => {
         </form>
       </LayoutForm>
       <div>
-        Ещё не зарегистрированы?{' '}
-        <a className="underline hover:no-underline" href="/sign-up">
+        <button className="underline hover:no-underline">
           Выйти
-        </a>
+        </button>
       </div>
     </div>
   )

@@ -32,7 +32,7 @@ const SignUp = () => {
     <div className="flex flex-col items-center gap-6">
       <LayoutForm>
         <form
-          className="flex flex-col items-center gap-9"
+          className="flex flex-col items-center gap-9 w-96"
           onSubmit={handleSubmit(onSubmit)}
         >
           <h1 className="text-2xl font-bold leading-7">Регистрация</h1>
@@ -69,7 +69,7 @@ const SignUp = () => {
       </LayoutForm>
       <div>
         Уже зарегистрированы?{' '}
-        <a className="underline hover:no-underline" href="/sign-up">
+        <a className="underline hover:no-underline" href="/sign-in">
           Войти
         </a>
       </div>
