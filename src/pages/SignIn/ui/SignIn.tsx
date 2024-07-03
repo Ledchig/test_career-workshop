@@ -70,7 +70,7 @@ const SignIn = () => {
       </LayoutForm>
       <div>
         Ещё не зарегистрированы?{' '}
-        <a className="underline hover:no-underline" href="/sign-up">
+        <a className="underline hover:no-underline" href="/">
           Зарегистрироваться
         </a>
       </div>
