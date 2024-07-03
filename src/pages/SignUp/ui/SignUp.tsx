@@ -1,7 +1,8 @@
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form'
-import Button from '../../components/Button'
-import Input from '../../components/Input'
-import LayoutForm from '../LayoutForm'
+import Button from '../../../shared/ui/Button'
+import Input from '../../../shared/ui/Input'
+import LayoutForm from '../../LayoutForm'
+import axios from 'axios'
 
 const SignUp = () => {
   const {
@@ -16,7 +17,15 @@ const SignUp = () => {
   })
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log(data)
+    const res = await axios.post(
+      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[AIzaSyCvgjDwx-IkME7BzVSpEgp98H4c4vyIj1o]',
+      {
+        email: data.email,
+        password: data.password,
+        returnSecureToken: true,
+      }
+    )
+    console.log(res)
   }
 
   return (

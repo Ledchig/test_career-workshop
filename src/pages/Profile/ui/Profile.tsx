@@ -1,9 +1,9 @@
-import { useForm, SubmitHandler, FieldValues } from 'react-hook-form'
-import Button from '../../components/Button'
-import Input from '../../components/Input'
-import LayoutForm from '../LayoutForm'
+import { useForm, FieldValues, SubmitHandler } from 'react-hook-form'
+import Button from '../../../shared/ui/Button'
+import Input from '../../../shared/ui/Input'
+import LayoutForm from '../../LayoutForm'
 
-const SignIn = () => {
+const Profile = () => {
   const {
     register,
     handleSubmit,
@@ -23,21 +23,18 @@ const SignIn = () => {
     <div className="flex flex-col items-center gap-6">
       <LayoutForm>
         <form
-          className="flex flex-col items-center gap-9 w-96"
+          className="flex flex-col items-center gap-9"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <h1 className="text-2xl font-bold leading-7">Авторизация</h1>
-          <div className="flex flex-col gap-6 w-full">
+          <h1 className="text-2xl font-bold leading-7">Изменение данных</h1>
+          <div className="flex flex-col gap-6">
             <Input
               type="text"
               label="E-mail"
               placeholder="Введите ваш email"
               inputValue={watch('email')}
               error={errors.email}
-              {...register('email', {
-                required: 'Поле обязательно для заполнения',
-                pattern: { value: /^\S+@\S+$/i, message: 'Некорректный email' },
-              })}
+              {...register('email')}
             />
             <Input
               type="password"
@@ -45,16 +42,10 @@ const SignIn = () => {
               placeholder="Введите ваш пароль"
               inputValue={watch('password')}
               error={errors.password}
-              {...register('password', {
-                required: 'Поле обязательно для заполнения',
-                minLength: {
-                  value: 8,
-                  message: 'Пароль должен содержать не менее 8 символов',
-                },
-              })}
+              {...register('password')}
             />
             <Button disabled={isSubmitting} type="submit">
-              Авторизоваться
+              Сохранить
             </Button>
           </div>
         </form>
@@ -62,11 +53,11 @@ const SignIn = () => {
       <div>
         Ещё не зарегистрированы?{' '}
         <a className="underline hover:no-underline" href="/sign-up">
-          Зарегистрироваться
+          Выйти
         </a>
       </div>
     </div>
   )
 }
 
-export default SignIn
+export default Profile

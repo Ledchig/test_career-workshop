@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import SignIn from './pages/SignIn/SignIn'
-import SignUp from './pages/SignUp/SignUp'
-import ChangeData from './pages/ChangeData/ChangeData'
+import SignIn from './pages/SignIn/ui/SignIn'
+import SignUp from './pages/SignUp/ui/SignUp'
+import Profile from './pages/Profile/ui/Profile'
 
 function App() {
   const router = createBrowserRouter([
@@ -19,7 +19,7 @@ function App() {
     },
     {
       path: '/change-data',
-      element: <ChangeData />,
+      element: <Profile />,
     },
   ])
 
