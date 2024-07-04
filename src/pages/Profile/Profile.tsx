@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -6,7 +5,7 @@ import LayoutForm from '../LayoutForm'
 import Button from '../../shared/ui/Button'
 import Input from '../../shared/ui/Input'
 import { changeData, logout } from '../../shared/store/slices/authSlice'
-import { useAppDispatch, useAppSelector } from '../../shared/hooks'
+import { useAppDispatch } from '../../shared/hooks'
 
 const Profile = () => {
   const {
@@ -23,7 +22,6 @@ const Profile = () => {
   const navigate = useNavigate()
 
   const dispatch = useAppDispatch()
-  const { isLoggedIn } = useAppSelector((state) => state.auth)
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     dispatch(changeData({ email: data.email, password: data.password }))
@@ -40,10 +38,6 @@ const Profile = () => {
     dispatch(logout())
     navigate('/sign-in')
   }
-
-  useEffect(() => {
-    !isLoggedIn && navigate('/')
-  }, [isLoggedIn, navigate])
 
   return (
     <div className="flex flex-col items-center gap-6">

@@ -1,9 +1,18 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import { Toaster } from 'sonner'
 import Profile from './pages/Profile/Profile'
 import SignIn from './pages/SignIn/SignIn'
 import SignUp from './pages/SignUp/SignUp'
 import { SVGIcon } from './shared/ui/SVGIcon'
+import { useAppSelector } from './shared/hooks'
+
+const ProtectedRoute = ({ element }: { element: React.JSX.Element }) => {
+  const { isLoggedIn } = useAppSelector((state) => state.auth)
+  if (!isLoggedIn) {
+    return <Navigate to="/sign-in" />
+  }
+  return element
+}
 
 function App() {
   const router = createBrowserRouter([
@@ -21,7 +30,7 @@ function App() {
     },
     {
       path: '/profile',
-      element: <Profile />,
+      element: <ProtectedRoute element=<Profile /> />,
     },
   ])
 
