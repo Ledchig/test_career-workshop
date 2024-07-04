@@ -26,16 +26,12 @@ const Profile = () => {
   const { isLoggedIn } = useAppSelector((state) => state.auth)
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log({ email: data.email, password: data.password })
     dispatch(changeData({ email: data.email, password: data.password }))
       .unwrap()
       .then(() => {
-        toast.success('Данные обновлены', {
-          
-        })
+        toast.success('Данные обновлены')
       })
       .catch((err) => {
-        console.log(err)
         toast.warning(err.message)
       })
   }
@@ -65,7 +61,6 @@ const Profile = () => {
               inputValue={watch('email')}
               error={errors.email}
               {...register('email', {
-                required: 'Поле обязательно для заполнения',
                 pattern: { value: /^\S+@\S+$/i, message: 'Некорректный email' },
               })}
             />
@@ -76,7 +71,6 @@ const Profile = () => {
               inputValue={watch('password')}
               error={errors.password}
               {...register('password', {
-                required: 'Поле обязательно для заполнения',
                 minLength: {
                   value: 8,
                   message: 'Пароль должен содержать не менее 8 символов',

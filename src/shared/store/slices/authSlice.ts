@@ -30,7 +30,7 @@ export const signUp = createAsyncThunk<
 )
 
 export const changeData = createAsyncThunk<
-  { idToken: string; refreshToken: string },
+  void,
   { email: string; password: string },
   { rejectValue: { message: string } }
 >(
@@ -40,10 +40,14 @@ export const changeData = createAsyncThunk<
     thunkAPI
   ) => {
     try {
-      const res = await AuthService.changeData(email, password)
-      return res
+      if (!email && !password) return
+      if (email) {
+        await AuthService.changeEmail(email)
+      }
+      if (password) {
+        await AuthService.changePassword(password)
+      }
     } catch (error: any) {
-      console.log(error.message)
       let message: string
       switch (error.message) {
         case 'EMAIL_EXISTS':
@@ -78,7 +82,6 @@ export const signIn = createAsyncThunk<
       return data
     } catch (error: any) {
       let message: string
-      console.log(error.message)
       switch (error.message) {
         case 'EMAIL_NOT_FOUND':
           message = 'Пользователь с таким email не найден'
@@ -102,11 +105,10 @@ export const logout = createAction('auth/logout')
 
 const initialState: {
   isLoggedIn: boolean
-  idToken: string | null
   error: string | null
 } = token
-  ? { isLoggedIn: true, idToken: token, error: null }
-  : { isLoggedIn: false, idToken: null, error: null }
+  ? { isLoggedIn: true, error: null }
+  : { isLoggedIn: false, error: null }
 
 const authSlice = createSlice({
   name: 'auth',
@@ -116,27 +118,22 @@ const authSlice = createSlice({
     builder
       .addCase(signUp.fulfilled, (state, { payload }) => {
         state.isLoggedIn = true
-        state.idToken = payload.idToken
         state.error = null
       })
       .addCase(signUp.rejected, (state, { payload }) => {
         state.isLoggedIn = false
-        state.idToken = null
         if (payload) state.error = payload.message
       })
       .addCase(signIn.fulfilled, (state, { payload }) => {
         state.isLoggedIn = true
-        state.idToken = payload.idToken
         state.error = null
       })
       .addCase(signIn.rejected, (state, { payload }) => {
         state.isLoggedIn = false
-        state.idToken = null
         if (payload) state.error = payload.message
       })
       .addCase(changeData.fulfilled, (state, { payload }) => {
         state.isLoggedIn = true
-        state.idToken = payload.idToken
         state.error = null
       })
       .addCase(changeData.rejected, (state, { payload }) => {
@@ -146,7 +143,6 @@ const authSlice = createSlice({
       .addCase(logout, (state) => {
         AuthService.logout()
         state.isLoggedIn = false
-        state.idToken = null
         state.error = null
       })
   },

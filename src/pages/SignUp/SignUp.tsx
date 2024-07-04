@@ -26,7 +26,6 @@ const SignUp = () => {
   const { isLoggedIn } = useAppSelector((state) => state.auth)
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    console.log({ email: data.email, password: data.password })
     dispatch(signUp({ email: data.email, password: data.password }))
       .unwrap()
       .then(() => {

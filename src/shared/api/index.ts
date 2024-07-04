@@ -37,7 +37,7 @@ const signIn = async (email: string, password: string) => {
   }
 }
 
-const changeData = async (email: string, password: string) => {
+const changeEmail = async (email: string) => {
   try {
     const token = localStorage.getItem('idToken')
     const resSetEmail = await axios.post(`${API_URL}update?key=${apiKey}`, {
@@ -45,19 +45,25 @@ const changeData = async (email: string, password: string) => {
       email: email,
       returnSecureToken: true,
     })
-    console.log(resSetEmail)
     const newToken = resSetEmail.data.idToken ?? token
-    console.log(newToken)
+    localStorage.setItem('idToken', newToken)
+    return newToken
+  } catch (err: any) {
+    throw err.response.data.error
+  }
+}
+
+const changePassword = async (password: string) => {
+  try {
+    const token = localStorage.getItem('idToken')
     const resSetPass = await axios.post(`${API_URL}update?key=${apiKey}`, {
-      idToken: newToken,
+      idToken: token,
       password: password,
       returnSecureToken: true,
     })
-    console.log(resSetPass)
-    localStorage.setItem('idToken', resSetPass.data.idToken)
-    localStorage.setItem('refreshToken', resSetPass.data.refreshToken)
-
-    return resSetPass.data.idToken
+    const newToken = resSetPass.data.idToken ?? token
+    localStorage.setItem('idToken', newToken)
+    return newToken
   } catch (err: any) {
     throw err.response.data.error
   }
@@ -72,7 +78,8 @@ const AuthService = {
   signUp,
   signIn,
   logout,
-  changeData,
+  changeEmail,
+  changePassword,
 }
 
 export default AuthService
