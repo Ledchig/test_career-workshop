@@ -5,15 +5,11 @@ const API_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:'
 
 const signUp = async (email: string, password: string) => {
   try {
-    const {
-      data: { idToken },
-    } = await axios.post(`${API_URL}signUp?key=${apiKey}`, {
+    await axios.post(`${API_URL}signUp?key=${apiKey}`, {
       email: email,
       password: password,
       returnSecureToken: true,
     })
-
-    return idToken
   } catch (err: any) {
     throw err.response.data.error
   }

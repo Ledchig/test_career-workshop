@@ -29,7 +29,8 @@ const SignUp = () => {
     dispatch(signUp({ email: data.email, password: data.password }))
       .unwrap()
       .then(() => {
-        navigate('/profile')
+        toast.success('Аккаунт создан! Перенаправляем на страницу авторизации')
+        setTimeout(() => navigate('/sign-in'), 5000)
       })
       .catch((err) => {
         toast.warning(err.message)
@@ -44,7 +45,7 @@ const SignUp = () => {
     <div className="flex flex-col items-center gap-6">
       <LayoutForm>
         <form
-          className="flex w-80 flex-col items-center gap-9 md:w-96"
+          className="flex w-60 flex-col items-center gap-9 md:w-96"
           onSubmit={handleSubmit(onSubmit)}
         >
           <h1 className="text-2xl font-bold leading-7">Регистрация</h1>

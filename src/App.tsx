@@ -50,11 +50,11 @@ function App() {
             unstyled: true,
             classNames: {
               toast:
-                'top-5 right-5 rounded-xl bg-yellow-50 p-5 realtive flex gap-3 w-[200px] items-center',
+                'top-5 me-5 md:me-0 md:right-5 ms-auto rounded-xl p-5 realtive flex gap-3 w-[200px] items-center max-w-48',
               title: 'text-black text-xs font-medium',
               closeButton:
                 'ms-auto absolute -right-1 top-2 stroke-black/50 border-none bg-transparent hover:bg-yellos-50',
-              warning: 'text-black text-xs font-medium ',
+              warning: 'text-black text-xs font-medium bg-yellow-50',
               success: 'text-black text-xs font-medium bg-green-100',
             },
           }}

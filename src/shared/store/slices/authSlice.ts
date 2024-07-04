@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import AuthService from '../../api'
 
 export const signUp = createAsyncThunk<
-  { idToken: string },
+  void,
   { email: string; password: string },
   { rejectValue: { message: string } }
 >(
@@ -13,8 +13,7 @@ export const signUp = createAsyncThunk<
     thunkAPI
   ) => {
     try {
-      const res = await AuthService.signUp(email, password)
-      return { idToken: res }
+      await AuthService.signUp(email, password)
     } catch (error: any) {
       let message: string
       if (error.message === 'EMAIL_EXISTS') {
@@ -47,7 +46,7 @@ export const changeData = createAsyncThunk<
         newToken = await AuthService.changeEmail(idToken, email)
       }
       if (password) {
-        const token = newToken || idToken 
+        const token = newToken || idToken
         newToken = await AuthService.changePassword(token, password)
       }
       return { idToken: newToken }
@@ -117,9 +116,8 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(signUp.fulfilled, (state, { payload }) => {
+      .addCase(signUp.fulfilled, (state) => {
         state.isLoggedIn = true
-        state.idToken = payload.idToken
         state.error = null
       })
       .addCase(signUp.rejected, (state, { payload }) => {

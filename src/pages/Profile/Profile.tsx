@@ -24,9 +24,16 @@ const Profile = () => {
   const dispatch = useAppDispatch()
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    if(data.email.length < 1 && data.password.length < 1) return toast.warning('Заполните хотя бы одно поле')
+    if (data.email.length < 1 && data.password.length < 1)
+      return toast.warning('Заполните хотя бы одно поле')
     if (!idToken) return redirect('/sign-in')
-    dispatch(changeData({ idToken: idToken, email: data.email, password: data.password }))
+    dispatch(
+      changeData({
+        idToken: idToken,
+        email: data.email,
+        password: data.password,
+      })
+    )
       .unwrap()
       .then(() => {
         toast.success('Данные обновлены')
@@ -45,7 +52,7 @@ const Profile = () => {
     <div className="flex flex-col items-center gap-6">
       <LayoutForm>
         <form
-          className="flex w-80 md:w-96 flex-col items-center gap-9"
+          className="flex w-60 flex-col items-center gap-9 md:w-96"
           onSubmit={handleSubmit(onSubmit)}
         >
           <h1 className="text-2xl font-bold leading-7">Изменение данных</h1>
