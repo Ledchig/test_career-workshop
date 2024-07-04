@@ -45,7 +45,7 @@ const Profile = () => {
     <div className="flex flex-col items-center gap-6">
       <LayoutForm>
         <form
-          className="flex w-96 flex-col items-center gap-9"
+          className="flex w-80 md:w-96 flex-col items-center gap-9"
           onSubmit={handleSubmit(onSubmit)}
         >
           <h1 className="text-2xl font-bold leading-7">Изменение данных</h1>

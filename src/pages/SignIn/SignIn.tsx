@@ -19,7 +19,7 @@ const SignIn = () => {
     reValidateMode: 'onChange',
     shouldUnregister: true,
   })
-  
+
   const navigate = useNavigate()
 
   const dispatch = useAppDispatch()
@@ -44,7 +44,7 @@ const SignIn = () => {
     <div className="flex flex-col items-center gap-6">
       <LayoutForm>
         <form
-          className="flex w-96 flex-col items-center gap-9"
+          className="flex w-64 flex-col items-center gap-9 md:w-96"
           onSubmit={handleSubmit(onSubmit)}
         >
           <h1 className="text-2xl font-bold leading-7">Авторизация</h1>
@@ -80,11 +80,13 @@ const SignIn = () => {
           </div>
         </form>
       </LayoutForm>
-      <div>
-        Ещё не зарегистрированы?{' '}
-        <a className="underline hover:no-underline" href="/sign-up">
-          Зарегистрироваться
-        </a>
+      <div className="flex justify-center text-sm md:text-base">
+        <p>
+          Ещё не зарегистрированы?{' '}
+          <a className="underline hover:no-underline" href="/sign-up">
+            Зарегистрироваться
+          </a>
+        </p>
       </div>
     </div>
   )
