@@ -1,10 +1,14 @@
-import { useForm, SubmitHandler, FieldValues } from 'react-hook-form'
-import Button from '../../../shared/ui/Button'
-import Input from '../../../shared/ui/Input'
-import LayoutForm from '../../LayoutForm'
-import axios from 'axios'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useForm, FieldValues, SubmitHandler } from 'react-hook-form'
+import { toast } from 'sonner'
+import LayoutForm from '../LayoutForm'
+import Button from '../../shared/ui/Button'
+import Input from '../../shared/ui/Input'
+import { changeData, logout } from '../../shared/store/slices/authSlice'
+import { useAppDispatch, useAppSelector } from '../../shared/hooks'
 
-const SignIn = () => {
+const Profile = () => {
   const {
     register,
     handleSubmit,
@@ -16,27 +20,44 @@ const SignIn = () => {
     shouldUnregister: true,
   })
 
+  const navigate = useNavigate()
+
+  const dispatch = useAppDispatch()
+  const { isLoggedIn } = useAppSelector((state) => state.auth)
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const res = await axios.post(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[AIzaSyCvgjDwx-IkME7BzVSpEgp98H4c4vyIj1o]',
-      {
-        email: data.email,
-        password: data.password,
-        returnSecureToken: true,
-      }
-    )
-    console.log(res)
+    console.log({ email: data.email, password: data.password })
+    dispatch(changeData({ email: data.email, password: data.password }))
+      .unwrap()
+      .then(() => {
+        toast.success('Данные обновлены', {
+          
+        })
+      })
+      .catch((err) => {
+        console.log(err)
+        toast.warning(err.message)
+      })
   }
+
+  const handleLogout = () => {
+    dispatch(logout())
+    navigate('/sign-in')
+  }
+
+  useEffect(() => {
+    !isLoggedIn && navigate('/')
+  }, [isLoggedIn, navigate])
 
   return (
     <div className="flex flex-col items-center gap-6">
       <LayoutForm>
         <form
-          className="flex flex-col items-center gap-9 w-96"
+          className="flex w-96 flex-col items-center gap-9"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <h1 className="text-2xl font-bold leading-7">Авторизация</h1>
-          <div className="flex flex-col gap-6 w-full">
+          <h1 className="text-2xl font-bold leading-7">Изменение данных</h1>
+          <div className="flex w-full flex-col gap-6">
             <Input
               type="text"
               label="E-mail"
@@ -63,19 +84,18 @@ const SignIn = () => {
               })}
             />
             <Button disabled={isSubmitting} type="submit">
-              Авторизоваться
+              Сохранить
             </Button>
           </div>
         </form>
       </LayoutForm>
       <div>
-        Ещё не зарегистрированы?{' '}
-        <a className="underline hover:no-underline" href="/sign-up">
-          Зарегистрироваться
-        </a>
+        <button className="underline hover:no-underline" onClick={handleLogout}>
+          Выйти
+        </button>
       </div>
     </div>
   )
 }
 
-export default SignIn
+export default Profile

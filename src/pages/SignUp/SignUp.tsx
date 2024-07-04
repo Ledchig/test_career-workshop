@@ -1,8 +1,12 @@
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form'
-import Button from '../../../shared/ui/Button'
-import Input from '../../../shared/ui/Input'
-import LayoutForm from '../../LayoutForm'
-import axios from 'axios'
+import { toast } from 'sonner'
+import Button from '../../shared/ui/Button'
+import Input from '../../shared/ui/Input'
+import LayoutForm from '../LayoutForm'
+import { signUp } from '../../shared/store/slices/authSlice'
+import { useAppDispatch, useAppSelector } from '../../shared/hooks'
 
 const SignUp = () => {
   const {
@@ -16,27 +20,36 @@ const SignUp = () => {
     shouldUnregister: true,
   })
 
+  const navigate = useNavigate()
+
+  const dispatch = useAppDispatch()
+  const { isLoggedIn } = useAppSelector((state) => state.auth)
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const res = await axios.post(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=[AIzaSyCvgjDwx-IkME7BzVSpEgp98H4c4vyIj1o]',
-      {
-        email: data.email,
-        password: data.password,
-        returnSecureToken: true,
-      }
-    )
-    console.log(res)
+    console.log({ email: data.email, password: data.password })
+    dispatch(signUp({ email: data.email, password: data.password }))
+      .unwrap()
+      .then(() => {
+        navigate('/profile')
+      })
+      .catch((err) => {
+        toast.warning(err.message)
+      })
   }
+
+  useEffect(() => {
+    isLoggedIn && navigate('/profile')
+  }, [isLoggedIn, navigate])
 
   return (
     <div className="flex flex-col items-center gap-6">
       <LayoutForm>
         <form
-          className="flex flex-col items-center gap-9 w-96"
+          className="flex w-96 flex-col items-center gap-9"
           onSubmit={handleSubmit(onSubmit)}
         >
           <h1 className="text-2xl font-bold leading-7">Регистрация</h1>
-          <div className="flex flex-col gap-6">
+          <div className="flex w-full flex-col gap-6">
             <Input
               type="text"
               label="E-mail"

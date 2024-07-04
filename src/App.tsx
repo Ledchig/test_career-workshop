@@ -1,7 +1,9 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import SignIn from './pages/SignIn/ui/SignIn'
-import SignUp from './pages/SignUp/ui/SignUp'
-import Profile from './pages/Profile/ui/Profile'
+import { Toaster } from 'sonner'
+import Profile from './pages/Profile/Profile'
+import SignIn from './pages/SignIn/SignIn'
+import SignUp from './pages/SignUp/SignUp'
+import { SVGIcon } from './shared/ui/SVGIcon'
 
 function App() {
   const router = createBrowserRouter([
@@ -18,7 +20,7 @@ function App() {
       element: <SignUp />,
     },
     {
-      path: '/change-data',
+      path: '/profile',
       element: <Profile />,
     },
   ])
@@ -26,20 +28,28 @@ function App() {
   return (
     <div className="flex h-screen flex-col bg-gray-100 font-sans leading-none">
       <header className="my-7 flex w-full justify-center">
-        <svg
-          width="32"
-          height="13"
-          viewBox="0 0 32 13"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M16.1921 6.24273L29.8083 0.5849L31.5556 2.11833L21.012 12.2178L16.1921 8.04055L11.4324 12.2178L0.888885 2.11833L2.6361 0.5849L16.1921 6.24273Z"
-            fill="#E64B4B"
-          />
-        </svg>
+        <SVGIcon iconId="logo" width={32} height={13} />
       </header>
       <div className="-mt-[69px] flex h-full items-center justify-center">
+        <Toaster
+          position="top-right"
+          closeButton={true}
+          icons={{
+            warning: <SVGIcon iconId="toast" width={28} height={28} />,
+          }}
+          toastOptions={{
+            unstyled: true,
+            classNames: {
+              toast:
+                'top-5 right-5 rounded-xl bg-yellow-50 p-5 realtive flex gap-3 w-[200px] items-center',
+              title: 'text-black text-xs font-medium',
+              closeButton:
+                'ms-auto absolute -right-1 top-2 stroke-black/50 border-none bg-transparent hover:bg-yellos-50',
+              warning: 'text-black text-xs font-medium ',
+              success: 'text-black text-xs font-medium bg-green-100',
+            },
+          }}
+        />
         <RouterProvider router={router} />
       </div>
     </div>
