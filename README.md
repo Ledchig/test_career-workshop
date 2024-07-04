@@ -1,3 +1,3 @@
-# Getting Started with Create React App
+# Getting Started
 
 This project was deployed on [firebase](https://test-career-workshop.web.app/)
