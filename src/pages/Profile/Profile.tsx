@@ -1,11 +1,11 @@
-import { useNavigate } from 'react-router-dom'
+import { redirect, useNavigate } from 'react-router-dom'
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
 import LayoutForm from '../LayoutForm'
 import Button from '../../shared/ui/Button'
 import Input from '../../shared/ui/Input'
 import { changeData, logout } from '../../shared/store/slices/authSlice'
-import { useAppDispatch } from '../../shared/hooks'
+import { useAppDispatch, useAppSelector } from '../../shared/hooks'
 
 const Profile = () => {
   const {
@@ -20,11 +20,13 @@ const Profile = () => {
   })
 
   const navigate = useNavigate()
-
+  const { idToken } = useAppSelector((state) => state.auth)
   const dispatch = useAppDispatch()
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    dispatch(changeData({ email: data.email, password: data.password }))
+    if(data.email.length < 1 && data.password.length < 1) return toast.warning('Заполните хотя бы одно поле')
+    if (!idToken) return redirect('/sign-in')
+    dispatch(changeData({ idToken: idToken, email: data.email, password: data.password }))
       .unwrap()
       .then(() => {
         toast.success('Данные обновлены')

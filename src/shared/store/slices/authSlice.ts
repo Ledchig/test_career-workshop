@@ -2,10 +2,8 @@ import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit'
 
 import AuthService from '../../api'
 
-const token = localStorage.getItem('idToken')
-
 export const signUp = createAsyncThunk<
-  { idToken: string; refreshToken: string },
+  { idToken: string },
   { email: string; password: string },
   { rejectValue: { message: string } }
 >(
@@ -16,7 +14,7 @@ export const signUp = createAsyncThunk<
   ) => {
     try {
       const res = await AuthService.signUp(email, password)
-      return res
+      return { idToken: res }
     } catch (error: any) {
       let message: string
       if (error.message === 'EMAIL_EXISTS') {
@@ -30,25 +28,31 @@ export const signUp = createAsyncThunk<
 )
 
 export const changeData = createAsyncThunk<
-  void,
-  { email: string; password: string },
+  { idToken: string },
+  { idToken: string; email: string; password: string },
   { rejectValue: { message: string } }
 >(
   'auth/changeData',
   async (
-    { email, password }: { email: string; password: string },
+    {
+      idToken,
+      email,
+      password,
+    }: { idToken: string; email: string; password: string },
     thunkAPI
   ) => {
     try {
-      if (!email && !password) return
+      let newToken = idToken
       if (email) {
-        await AuthService.changeEmail(email)
+        newToken = await AuthService.changeEmail(idToken, email)
       }
       if (password) {
-        await AuthService.changePassword(password)
+        const token = newToken || idToken 
+        newToken = await AuthService.changePassword(token, password)
       }
+      return { idToken: newToken }
     } catch (error: any) {
-      let message: string
+      let message = 'Случилось что-то странное, попробуйте ещё раз'
       switch (error.message) {
         case 'EMAIL_EXISTS':
           message = 'Этот email уже занят'
@@ -59,16 +63,15 @@ export const changeData = createAsyncThunk<
             'Срок действия вашей сессии истек. Пожалуйста, войдите в аккаунт заново'
           break
         default:
-          message = 'Случилось что-то странное, попробуйте ещё раз'
           break
       }
-      return thunkAPI.rejectWithValue({ message: message })
+      return thunkAPI.rejectWithValue({ message })
     }
   }
 )
 
 export const signIn = createAsyncThunk<
-  { idToken: string; refreshToken: string },
+  { idToken: string },
   { email: string; password: string },
   { rejectValue: { message: string } }
 >(
@@ -78,10 +81,10 @@ export const signIn = createAsyncThunk<
     thunkAPI
   ) => {
     try {
-      const data = await AuthService.signIn(email, password)
-      return data
+      const idToken = await AuthService.signIn(email, password)
+      return { idToken }
     } catch (error: any) {
-      let message: string
+      let message = 'Случилось что-то странное, попробуйте ещё раз'
       switch (error.message) {
         case 'EMAIL_NOT_FOUND':
           message = 'Пользователь с таким email не найден'
@@ -93,10 +96,9 @@ export const signIn = createAsyncThunk<
           message = 'Пользователь заблокирован'
           break
         default:
-          message = 'Случилось что-то странное, попробуйте ещё раз'
           break
       }
-      return thunkAPI.rejectWithValue({ message: message })
+      return thunkAPI.rejectWithValue({ message })
     }
   }
 )
@@ -105,10 +107,9 @@ export const logout = createAction('auth/logout')
 
 const initialState: {
   isLoggedIn: boolean
+  idToken: string | null
   error: string | null
-} = token
-  ? { isLoggedIn: true, error: null }
-  : { isLoggedIn: false, error: null }
+} = { isLoggedIn: false, idToken: null, error: null }
 
 const authSlice = createSlice({
   name: 'auth',
@@ -118,6 +119,7 @@ const authSlice = createSlice({
     builder
       .addCase(signUp.fulfilled, (state, { payload }) => {
         state.isLoggedIn = true
+        state.idToken = payload.idToken
         state.error = null
       })
       .addCase(signUp.rejected, (state, { payload }) => {
@@ -126,6 +128,7 @@ const authSlice = createSlice({
       })
       .addCase(signIn.fulfilled, (state, { payload }) => {
         state.isLoggedIn = true
+        state.idToken = payload.idToken
         state.error = null
       })
       .addCase(signIn.rejected, (state, { payload }) => {
@@ -134,6 +137,7 @@ const authSlice = createSlice({
       })
       .addCase(changeData.fulfilled, (state, { payload }) => {
         state.isLoggedIn = true
+        state.idToken = payload.idToken
         state.error = null
       })
       .addCase(changeData.rejected, (state, { payload }) => {
@@ -141,7 +145,7 @@ const authSlice = createSlice({
         if (payload) state.error = payload.message
       })
       .addCase(logout, (state) => {
-        AuthService.logout()
+        state.idToken = null
         state.isLoggedIn = false
         state.error = null
       })
