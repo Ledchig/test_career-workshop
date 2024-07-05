@@ -7,6 +7,7 @@ import Button from '../../shared/ui/Button'
 import Input from '../../shared/ui/Input'
 import { signIn } from '../../shared/store/slices/authSlice'
 import { useAppDispatch, useAppSelector } from '../../shared/hooks'
+import { regExpForEmail } from '../../shared/constants'
 
 const SignIn = () => {
   const {
@@ -57,7 +58,7 @@ const SignIn = () => {
               error={errors.email}
               {...register('email', {
                 required: 'Поле обязательно для заполнения',
-                pattern: { value: /^\S+@\S+$/i, message: 'Некорректный email' },
+                pattern: { value: regExpForEmail, message: 'Некорректный email' },
               })}
             />
             <Input

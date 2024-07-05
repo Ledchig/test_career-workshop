@@ -7,6 +7,7 @@ import Input from '../../shared/ui/Input'
 import LayoutForm from '../LayoutForm'
 import { signUp } from '../../shared/store/slices/authSlice'
 import { useAppDispatch, useAppSelector } from '../../shared/hooks'
+import { regExpForEmail } from '../../shared/constants'
 
 const SignUp = () => {
   const {
@@ -56,7 +57,13 @@ const SignUp = () => {
               placeholder="Введите ваш email"
               inputValue={watch('email')}
               error={errors.email}
-              {...register('email')}
+              {...register('email', {
+                required: 'Поле обязательно для заполнения',
+                pattern: {
+                  value: regExpForEmail,
+                  message: 'Некорректный email',
+                },
+              })}
             />
             <Input
               type="password"
@@ -64,7 +71,13 @@ const SignUp = () => {
               placeholder="Придумайте пароль"
               inputValue={watch('password')}
               error={errors.password}
-              {...register('password')}
+              {...register('password', {
+                required: 'Поле обязательно для заполнения',
+                minLength: {
+                  value: 8,
+                  message: 'Пароль должен содержать не менее 8 символов',
+                },
+              })}
             />
             <Input
               type="password"
@@ -72,7 +85,15 @@ const SignUp = () => {
               placeholder="Повторите пароль"
               inputValue={watch('repeatPassword')}
               error={errors.repeatPassword}
-              {...register('repeatPassword')}
+              {...register('repeatPassword', {
+                required: 'Поле обязательно для заполнения',
+                minLength: {
+                  value: 8,
+                  message: 'Пароль должен содержать не менее 8 символов',
+                },
+                validate: (value) =>
+                  value === watch('password') || 'Пароли не совпадают',
+              })}
             />
             <Button disabled={isSubmitting} type="submit">
               Зарегистрироваться

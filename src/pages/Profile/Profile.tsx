@@ -24,7 +24,7 @@ const Profile = () => {
   const dispatch = useAppDispatch()
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    if (data.email.length < 1 && data.password.length < 1)
+    if (data.email.trim().length < 1 && data.password.trim().length < 1)
       return toast.warning('Заполните хотя бы одно поле')
     if (!idToken) return redirect('/sign-in')
     dispatch(

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { cn } from '../utils'
 
 const Loading = () => {
   return (
@@ -24,11 +25,11 @@ const Button = React.forwardRef<
 >(({ disabled, ...props }, ref) => {
   return (
     <button
-      className={
+      className={cn(
         'flex justify-center rounded-xl bg-green-500 px-5 py-4 font-semibold text-white' +
-        ' ' +
-        `hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-900 ${disabled ? 'cursor-not-allowed' : ''} `
-      }
+          ' ' +
+          `hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-900 ${disabled ? 'cursor-not-allowed' : ''}`
+      )}
       ref={ref}
       {...props}
     >
