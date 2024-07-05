@@ -116,10 +116,6 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(signUp.fulfilled, (state) => {
-        state.isLoggedIn = true
-        state.error = null
-      })
       .addCase(signUp.rejected, (state, { payload }) => {
         state.isLoggedIn = false
         if (payload) state.error = payload.message
