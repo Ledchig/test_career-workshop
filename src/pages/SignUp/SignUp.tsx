@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -10,11 +10,13 @@ import { useAppDispatch, useAppSelector } from '../../shared/hooks'
 import { regExpForEmail } from '../../shared/constants'
 
 const SignUp = () => {
+  const [isDisabled, setIsDisabled] = useState(false)
+
   const {
     register,
     handleSubmit,
     watch,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = useForm<FieldValues>({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
@@ -27,6 +29,7 @@ const SignUp = () => {
   const { isLoggedIn } = useAppSelector((state) => state.auth)
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    setIsDisabled(true)
     dispatch(signUp({ email: data.email, password: data.password }))
       .unwrap()
       .then(() => {
@@ -36,6 +39,7 @@ const SignUp = () => {
       .catch((err) => {
         toast.warning(err.message)
       })
+      .finally(() => setIsDisabled(false))
   }
 
   useEffect(() => {
@@ -95,7 +99,7 @@ const SignUp = () => {
                   value === watch('password') || 'Пароли не совпадают',
               })}
             />
-            <Button disabled={isSubmitting} type="submit">
+            <Button disabled={isDisabled} type="submit">
               Зарегистрироваться
             </Button>
           </div>

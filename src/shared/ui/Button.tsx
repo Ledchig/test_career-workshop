@@ -25,6 +25,8 @@ const Button = React.forwardRef<
 >(({ disabled, ...props }, ref) => {
   return (
     <button
+      aria-disabled={disabled}
+      disabled={disabled}
       className={cn(
         'flex justify-center rounded-xl bg-green-500 px-5 py-4 font-semibold text-white' +
           ' ' +

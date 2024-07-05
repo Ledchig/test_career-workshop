@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { redirect, useNavigate } from 'react-router-dom'
 import { useForm, FieldValues, SubmitHandler } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -8,11 +9,13 @@ import { changeData, logout } from '../../shared/store/slices/authSlice'
 import { useAppDispatch, useAppSelector } from '../../shared/hooks'
 
 const Profile = () => {
+  const [isDisabled, setIsDisabled] = useState(false)
+
   const {
     register,
     handleSubmit,
     watch,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = useForm<FieldValues>({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
@@ -24,6 +27,7 @@ const Profile = () => {
   const dispatch = useAppDispatch()
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    setIsDisabled(true)
     if (data.email.trim().length < 1 && data.password.trim().length < 1)
       return toast.warning('Заполните хотя бы одно поле')
     if (!idToken) return redirect('/sign-in')
@@ -41,6 +45,7 @@ const Profile = () => {
       .catch((err) => {
         toast.warning(err.message)
       })
+      .finally(() => setIsDisabled(false))
   }
 
   const handleLogout = () => {
@@ -80,7 +85,7 @@ const Profile = () => {
                 },
               })}
             />
-            <Button disabled={isSubmitting} type="submit">
+            <Button disabled={isDisabled} type="submit">
               Сохранить
             </Button>
           </div>

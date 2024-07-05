@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler, FieldValues } from 'react-hook-form'
 import { toast } from 'sonner'
@@ -10,11 +10,13 @@ import { useAppDispatch, useAppSelector } from '../../shared/hooks'
 import { regExpForEmail } from '../../shared/constants'
 
 const SignIn = () => {
+  const [isDisabled, setIsDisabled] = useState(false)
+  
   const {
     register,
     handleSubmit,
     watch,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = useForm<FieldValues>({
     mode: 'onSubmit',
     reValidateMode: 'onChange',
@@ -27,6 +29,7 @@ const SignIn = () => {
   const { isLoggedIn } = useAppSelector((state) => state.auth)
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    setIsDisabled(true)
     dispatch(signIn({ email: data.email, password: data.password }))
       .unwrap()
       .then(() => {
@@ -35,6 +38,7 @@ const SignIn = () => {
       .catch((err) => {
         toast.warning(err.message)
       })
+      .finally(() => setIsDisabled(false))
   }
 
   useEffect(() => {
@@ -58,7 +62,10 @@ const SignIn = () => {
               error={errors.email}
               {...register('email', {
                 required: 'Поле обязательно для заполнения',
-                pattern: { value: regExpForEmail, message: 'Некорректный email' },
+                pattern: {
+                  value: regExpForEmail,
+                  message: 'Некорректный email',
+                },
               })}
             />
             <Input
@@ -75,7 +82,7 @@ const SignIn = () => {
                 },
               })}
             />
-            <Button disabled={isSubmitting} type="submit">
+            <Button disabled={isDisabled} type="submit">
               Авторизоваться
             </Button>
           </div>
