@@ -9,4 +9,4 @@
 Все данные хранятся в состонии через Redux-toolkit. Предусмотренна обработка всех возможных ошибок при запросах по API - под каждую свой текст во всплывающем Toast.
 
 
-Посмотреть задеполенный вариант можно [по ссылке]([https://test-career-workshop.web.app/](https://test-career-workshop.firebaseapp.com/))
+Посмотреть задеполенный вариант можно [по ссылке](https://test-career-workshop.firebaseapp.com/)
