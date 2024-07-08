@@ -15,7 +15,7 @@ import { getAuth } from "firebase/auth"
 
 const firebaseConfig = {
 
-    apiKey: `${process.env.API_KEY}`,
+    apiKey: "AIzaSyCvgjDwx-IkME7BzVSpEgp98H4c4vyIj1o",
 
     authDomain: "test-career-workshop.firebaseapp.com",
 
@@ -38,4 +38,6 @@ const app = initializeApp(firebaseConfig)
 
 const auth = getAuth(app)
 
-export { auth }
+const apiKey = 'AIzaSyCvgjDwx-IkME7BzVSpEgp98H4c4vyIj1o'
+
+export { auth, apiKey }
