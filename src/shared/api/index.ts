@@ -1,11 +1,8 @@
 import axios from 'axios'
-import { apiKey } from '../../firebase'
-
-const API_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:'
 
 const signUp = async (email: string, password: string) => {
   try {
-    await axios.post(`${API_URL}signUp?key=${apiKey}`, {
+    await axios.post(`${process.env.API_URL}signUp?key=${process.env.API_KEY}`, {
       email: email,
       password: password,
       returnSecureToken: true,
@@ -19,7 +16,7 @@ const signIn = async (email: string, password: string) => {
   try {
     const {
       data: { idToken },
-    } = await axios.post(`${API_URL}signInWithPassword?key=${apiKey}`, {
+    } = await axios.post(`${process.env.API_URL}signInWithPassword?key=${process.env.API_KEY}`, {
       email: email,
       password: password,
       returnSecureToken: true,
@@ -33,7 +30,7 @@ const signIn = async (email: string, password: string) => {
 
 const changeEmail = async (idToken: string, email: string) => {
   try {
-    const resSetEmail = await axios.post(`${API_URL}update?key=${apiKey}`, {
+    const resSetEmail = await axios.post(`${process.env.API_URL}update?key=${process.env.API_KEY}`, {
       idToken: idToken,
       email: email,
       returnSecureToken: true,
@@ -46,7 +43,7 @@ const changeEmail = async (idToken: string, email: string) => {
 
 const changePassword = async (idToken: string, password: string) => {
   try {
-    const resSetPass = await axios.post(`${API_URL}update?key=${apiKey}`, {
+    const resSetPass = await axios.post(`${process.env.API_URL}update?key=${process.env.API_KEY}`, {
       idToken: idToken,
       password: password,
       returnSecureToken: true,
